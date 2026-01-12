@@ -24,9 +24,9 @@ const ProjectAnalytics = () => {
 
   return (
     <div className="grid gap-4 md:gap-5 lg:grid-cols-2 xl:grid-cols-3">
-      <AnalyticsCard title={`Completed Tasks`} value={analytics?.completedTasks || 0} isLoading={isPending} />
-      <AnalyticsCard title={`Overdue Tasks`} value={analytics?.overdueTasks || 0} isLoading={isPending} />
-      <AnalyticsCard title={`Total Tasks`} value={analytics?.totalTasks || 0} isLoading={isPending} />
+      <AnalyticsCard title={`Completed Tasks`} value={analytics?.completedTasks || 0} isLoading={isPending} iconColor="" />
+      <AnalyticsCard title={`Overdue Tasks`} value={analytics?.overdueTasks || 0} isLoading={isPending} iconColor="text-rose-500" />
+      <AnalyticsCard title={`Total Tasks`} value={analytics?.totalTasks || 0} isLoading={isPending} iconColor="text-sky-500" />
     </div>
   );
 };

@@ -22,16 +22,19 @@ const WorkspaceAnalytics = () => {
           isLoading={isPending}
           title={`Total Task`}
           value={anaylytics?.totalTasks || 0}
+          iconColor="text-sky-500"
         />
         <AnalyticsCard
           isLoading={isPending}
           title={`Overdue Task`}
           value={anaylytics?.overdueTasks || 0}
+          iconColor="text-rose-500"
         />
         <AnalyticsCard
           isLoading={isPending}
           title={`Completed Task`}
           value={anaylytics?.completedTasks || 0}
+          iconColor="text-green-500"
         />
      
     </div>

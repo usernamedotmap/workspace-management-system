@@ -1,5 +1,6 @@
 import { CustomError } from "@/types/custom-error.type";
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
+import { queryClient } from "./react-query";
 
 const baseURL = import.meta.env.VITE_API_BASE_URL;
 
@@ -62,6 +63,9 @@ API.interceptors.response.use(
       if (originalRequest.url?.includes("auth/refresh")) {
         isRefreshing = false;
         processQueue(new Error("Refresh token expired"));
+        queryClient.removeQueries({
+          queryKey: ["authUser"],
+        })
         redirectToLogin();
         return Promise.reject(error);
       }
@@ -102,6 +106,9 @@ API.interceptors.response.use(
     // For all other 401s (no token, invalid token, etc.) - just reject without redirecting
     // Let React Query and your ProtectedRoute handle the redirect
     if (status === 401) {
+       queryClient.removeQueries({
+          queryKey: ["authUser"],
+        })
       const customError: CustomError = {
         ...error,
         errorCode: (data as any)?.errorCode || "UNAUTHORIZED",

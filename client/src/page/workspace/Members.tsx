@@ -2,10 +2,12 @@ import { Separator } from "@/components/ui/separator";
 import InviteMember from "@/components/workspace/member/invite-member";
 import AllMembers from "@/components/workspace/member/all-members";
 import WorkspaceHeader from "@/components/workspace/common/workspace-header";
+import PageMeta from "@/components/common/PageMeta";
 
 export default function Members() {
   return (
-    <div className="w-full h-auto pt-2">
+    <div className="w-full h-auto pt-2 ">
+      <PageMeta title="Workspace Member" description="Inviting and managing workspace members" />
       <WorkspaceHeader />
       <Separator className="my-4 " />
       <main>

@@ -442,7 +442,7 @@ export default function CreateTaskForm(props: {
 
             <Button
               disabled={isPending}
-              className="flex place-self-end  h-[40px] text-white font-semibold"
+              className="flex place-self-end  h-[40px] bg-primary text-primary-foreground font-semibold hover:bg-muted"
               type="submit"
             >
               {isPending && <Loader className="animate-spin" />}

@@ -4,8 +4,9 @@ import { Navigate, Outlet } from "react-router-dom";
 const ProtectedRoute = () => {
   
   // const { data: authData, isLoading, isFetching } = useAuth();
-  const {data: authData, isLoading} = useAuth();
+  const {data: authData, isLoading, isError} = useAuth();
   const user = authData?.user;
+
 
 
 
@@ -13,8 +14,8 @@ const ProtectedRoute = () => {
     return <DashboardSkeleton />
   }
 
-  if (!user) {
-    return <Navigate to={"/"} replace />
+  if (isError || !user) {
+    return <Navigate to="/" replace />
   }
   // return user ? <Outlet /> : <Navigate to="/" replace />
   return <Outlet />

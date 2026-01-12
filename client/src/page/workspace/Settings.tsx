@@ -1,3 +1,4 @@
+import PageMeta from "@/components/common/PageMeta";
 import { Separator } from "@/components/ui/separator";
 import WorkspaceHeader from "@/components/workspace/common/workspace-header";
 import EditWorkspaceForm from "@/components/workspace/edit-workspace-form";
@@ -8,6 +9,7 @@ import withPermission from "@/hoc/with-permission";
 const Settings = () => {
   return (
     <div className="w-full h-auto py-2">
+      <PageMeta title="Workspace Settings" description="Manage your workspace settings" />
       <WorkspaceHeader />
       <Separator className="my-4 " />
       <main>

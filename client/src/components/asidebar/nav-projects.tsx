@@ -29,6 +29,7 @@ import { PaginationType } from "@/types/api.type";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteProjectMutationFn } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
+import PageMeta from "../common/PageMeta";
 
 export function NavProjects() {
   const navigate = useNavigate();
@@ -96,6 +97,7 @@ export function NavProjects() {
   };
   return (
     <>
+    <PageMeta title="Workspace Projects" description="List of projects in the workspace" />
       <SidebarGroup className="group-data-[collapsible=icon]:hidden">
         <SidebarGroupLabel className="w-full justify-between pr-0">
           <span>Projects</span>

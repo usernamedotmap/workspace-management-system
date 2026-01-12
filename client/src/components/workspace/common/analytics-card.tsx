@@ -5,8 +5,9 @@ const AnalyticsCard = (props: {
   title: string;
   value: number;
   isLoading: boolean;
+  iconColor?: string;
 }) => {
-  const { title, value, isLoading } = props;
+  const { title, value, isLoading, iconColor = "text-muted-foreground" } = props;
 
   const getArrowIcon = () => {
     if (title === "Overdue Task") {
@@ -34,7 +35,7 @@ const AnalyticsCard = (props: {
         </div>
         <Activity
           strokeWidth={2.5}
-          className="h-4 w-4  text-muted-foreground"
+          className={`h-4 w-4 ${iconColor}`}
         />
       </CardHeader>
       <CardContent className="w-full">

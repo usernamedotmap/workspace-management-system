@@ -10,6 +10,7 @@ import {
 import { Separator } from "./ui/separator";
 import { Link, useLocation } from "react-router-dom";
 import useWorkspaceId from "@/hooks/use-workspace-id";
+import ThemeToggle from "./toggle/theme-toggle";
 
 const Header = () => {
   const location = useLocation();
@@ -26,8 +27,11 @@ const Header = () => {
   };
 
   const pageHeading = getPageLabel(pathname);
+
+  
+
   return (
-    <header className="flex sticky top-0 z-50 bg-white h-12 shrink-0 items-center border-b">
+    <header className="flex sticky top-0 z-50 bg-white h-12 shrink-0 items-center border-b dark:bg-background">
       <div className="flex flex-1 items-center gap-2 px-3">
         <SidebarTrigger />
         <Separator orientation="vertical" className="mr-2 h-4" />
@@ -39,7 +43,7 @@ const Header = () => {
                   <Link to={`/workspace/${workspaceId}`}>Dashboard</Link>
                 </BreadcrumbLink>
               ) : (
-                <BreadcrumbPage className="line-clamp-1 ">
+                <BreadcrumbPage className="line-clamp-1">
                   Dashboard
                 </BreadcrumbPage>
               )}
@@ -57,6 +61,10 @@ const Header = () => {
             )}
           </BreadcrumbList>
         </Breadcrumb>
+      </div>
+
+      <div className="flex items-center justify-center gap-2 pr-2">
+        <ThemeToggle />
       </div>
     </header>
   );

@@ -21,7 +21,7 @@ import {
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useWorkspaceId from "@/hooks/use-workspace-id";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createProjectMutationFn } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
 import { Loader } from "lucide-react";
@@ -167,7 +167,7 @@ export default function CreateProjectForm({ onClose }: { onClose: () => void }) 
             </div>
 
             <Button
-              className="flex place-self-end  h-[40px] text-white font-semibold"
+              className="flex place-self-end  h-[40px] bg-primary text-primary-foreground font-semibold hover:bg-muted"
               type="submit"
               disabled={isPending}
             >
