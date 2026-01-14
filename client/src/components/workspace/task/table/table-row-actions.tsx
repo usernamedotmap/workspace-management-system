@@ -18,6 +18,7 @@ import useWorkspaceId from "@/hooks/use-workspace-id";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteTaskMutationFn } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
+import { AxiosError } from "axios";
 
 interface DataTableRowActionsProps {
   row: Row<TaskType>;
@@ -38,7 +39,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
 
   const taskId = row.original._id as string;
   const taskCode = row.original.taskCode;
-  const projectId  = row.original.project?._id as string
+  const projectId = row.original.project?._id as string
 
   const task = row.original;
 
@@ -58,12 +59,21 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
         setTimeout(() => setOpenDeleteDialog(false), 100);
 
       },
-      onError: (error) => {
-        toast({
-          title: "Error",
-          description: error.response?.data?.message || error?.message,
-          variant: "destructive"
-        })
+      onError: (error: unknown) => {
+        if (error instanceof AxiosError) {
+          toast({
+            title: "Error",
+            description: error.response?.data?.message || error?.message,
+            variant: "destructive"
+          })
+        } else {
+          toast({
+            title: "Error",
+            description: (error as Error).message,
+            variant: "destructive"
+          })
+        }
+
       }
     })
   };
@@ -105,7 +115,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
         onClose={() => setOpenDeleteDialog(false)}
         onConfirm={handleConfirm}
         title="Delete Task"
-         description={
+        description={
           <>Are you sure you want to delete <strong className="text-red-500">{taskCode
           }</strong>? This action cannot be undone.
           </>}

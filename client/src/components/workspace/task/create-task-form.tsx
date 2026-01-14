@@ -37,6 +37,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createTaskMutationFn } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
+import { AxiosError } from "axios";
 
 export default function CreateTaskForm(props: {
   projectId?: string;
@@ -167,12 +168,21 @@ export default function CreateTaskForm(props: {
         });
         onClose();
       },
-      onError: (error) => {
-        toast({
-          title: "Error",
-          description: error.response?.data?.message || error?.message,
-          variant: "destructive"
-        })
+      onError: (error: unknown) => {
+        if (error instanceof AxiosError) {
+          toast({
+            title: "Error",
+            description: error.response?.data?.message || error?.message,
+            variant: "destructive"
+          })
+        } else {
+          toast({
+            title: "Error",
+            description: (error as Error).message,
+            variant: "destructive"
+          })
+        }
+
       }
     })
 

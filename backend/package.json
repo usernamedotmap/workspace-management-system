@@ -6,7 +6,7 @@
   "scripts": {
     "seed": "ts-node src/seeders/role.seeder.ts",
     "dev": "ts-node-dev --files src/index.ts",
-    "build": "tsc && cp /package.json ./dist",
+    "build": "tsc && cp package.json ./dist",
     "start": "node dist/index.js"
   },
   "keywords": [],
@@ -42,6 +42,6 @@
     "@types/uuid": "^9.0.7",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.7.2"
+    "typescript": "^5.9.3"
   }
 }

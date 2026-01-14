@@ -13,7 +13,8 @@ import { editTaskMutationFn } from '@/lib/api'
 import { cn } from '@/lib/utils'
 import { TaskType } from '@/types/api.type'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
 import { format } from 'date-fns'
 import { CalendarIcon, Loader } from 'lucide-react'
 import { useForm } from 'react-hook-form'
@@ -107,13 +108,22 @@ export default function EditTaskForm({ task, onClose }: { task: TaskType, onClos
                 })
                 setTimeout(() => onClose(), 100);
             },
-            onError: (error) => {
-                toast({
-                    title: "Error",
-                    description: error.response?.data?.message || error.message,
-                    variant: "destructive"
-                })
+            onError: (error: unknown) => {
+                if (error instanceof AxiosError) {
+                    toast({
+                        title: "Error",
+                        description: error.response?.data?.message || error.message,
+                        variant: "destructive"
+                    });
+                } else {
+                    toast({
+                        title: "Error",
+                        description: (error as Error).message,
+                        variant: "destructive"
+                    });
+                }
             }
+
         })
     }
 

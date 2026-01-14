@@ -24,6 +24,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { changeWorkspaceMemberRoleMutationFn } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
 import { Permissions } from "@/constant";
+import { AxiosError } from "axios";
 const AllMembers = () => {
   const { user, hasPermission } = useAuthContext();
 
@@ -62,12 +63,21 @@ const AllMembers = () => {
           variant: "success",
         })
       },
-      onError: (error) => {
-        toast({
-          title: "Error",
-          description: error.response.data.message || error.message,
-          variant: "destructive",
-        })
+      onError: (error: unknown) => {
+        if (error instanceof AxiosError) {
+          toast({
+            title: "Error",
+            description: error.response?.data.message || error.message,
+            variant: "destructive",
+          })
+        } else {
+          toast({
+            title: "Error",
+            description: (error as Error).message,
+            variant: "destructive",
+          })
+        }
+
       }
     })
   }

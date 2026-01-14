@@ -145,8 +145,6 @@ export const getProjectsInWorkspaceQueryFn = async ({
   workspaceId,
   pageNumber,
   pageSize,
-  keyword,
-  skip,
 }: AllProjectPayloadType): Promise<AllProjectResponseType> => {
   const response = await API.get(
     `/project/workspace/${workspaceId}/all?pageSize=${pageSize}&pageNumber=${pageNumber}`

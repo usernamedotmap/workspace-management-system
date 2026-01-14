@@ -14,7 +14,7 @@ import useAuth from "@/hooks/api/use-auth";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { invitedUserJoinWorkspaceMutationFn } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
-import { useAuthContext } from "@/context/auth-provider";
+import { AxiosError } from "axios";
 
 const InviteUser = () => {
   const navigate = useNavigate();
@@ -44,12 +44,21 @@ const InviteUser = () => {
         })
         navigate(`/workspace/${data.workspaceId}`);
       },
-      onError: (error) => {
-        toast({
-          title: "Error",
-          description: error.response.data.message || error?.message,
-          variant: "destructive",
-        })
+      onError: (error: unknown) => {
+        if (error instanceof AxiosError) {
+          toast({
+            title: "Error",
+            description: error.response?.data.message || error?.message,
+            variant: "destructive",
+          })
+        } else {
+          toast({
+            title: "Error",
+            description: (error as Error).message,
+            variant: "destructive",
+          })
+        }
+
       }
     })
 

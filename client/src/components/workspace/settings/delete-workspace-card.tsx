@@ -8,6 +8,7 @@ import { toast } from "@/hooks/use-toast";
 import useWorkspaceId from "@/hooks/use-workspace-id";
 import { deleteWorkspaceMutationFn } from "@/lib/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 
 const DeleteWorkspaceCard = () => {
@@ -36,10 +37,17 @@ const DeleteWorkspaceCard = () => {
         navigate(`/workspace/${data.currentWorkspace}`);
         setTimeout(() => onCloseDialog(), 100)
       },
-      onError: (error) => {
+      onError: (error: unknown) => {
+        if (error instanceof AxiosError) {
+          toast({
+            title: "Error",
+            description: error?.response?.data?.message || error?.message,
+            variant: "destructive",
+          })
+        }
         toast({
           title: "Error",
-          description: error?.response?.data?.message || error?.message,
+          description: (error as Error).message,
           variant: "destructive",
         })
       }

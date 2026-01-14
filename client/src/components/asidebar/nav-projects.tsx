@@ -30,6 +30,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteProjectMutationFn } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
 import PageMeta from "../common/PageMeta";
+import { AxiosError } from "axios";
 
 export function NavProjects() {
   const navigate = useNavigate();
@@ -85,19 +86,26 @@ export function NavProjects() {
         navigate(`/workspace/${workspaceId}`);
         setTimeout(() => onCloseDialog(), 500);
       },
-      onError: (error) => {
-        toast({
-          title: "Error",
-          description: error.response?.data?.message || error?.message,
-          variant: "destructive"
-        })
+      onError: (error: unknown) => {
+        if (error instanceof AxiosError) {
+          toast({
+            title: "Error",
+            description: error.response?.data?.message || error?.message,
+            variant: "destructive"
+          })
+        } else {
+          toast({
+            title: "Error",
+            description: (error as Error).message,
+            variant: "destructive"
+          })
+        }
       }
-    })
-
-  };
+    });
+  }
   return (
     <>
-    <PageMeta title="Workspace Projects" description="List of projects in the workspace" />
+      <PageMeta title="Workspace Projects" description="List of projects in the workspace" />
       <SidebarGroup className="group-data-[collapsible=icon]:hidden">
         <SidebarGroupLabel className="w-full justify-between pr-0">
           <span>Projects</span>

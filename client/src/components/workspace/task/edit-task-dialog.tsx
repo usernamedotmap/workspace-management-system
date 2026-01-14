@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { TaskType } from "@/types/api.type";
 import EditTaskForm from "./edit-task-form";
 import PermissionsGuard from "@/components/resuable/permission-guard";

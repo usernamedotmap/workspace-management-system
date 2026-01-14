@@ -25,6 +25,7 @@ import { editProjectMutationFn } from "@/lib/api";
 import useWorkspaceId from "@/hooks/use-workspace-id";
 import { toast } from "@/hooks/use-toast";
 import { Loader } from "lucide-react";
+import { AxiosError } from "axios";
 
 export default function EditProjectForm(props: {
   project?: ProjectType;
@@ -99,12 +100,21 @@ export default function EditProjectForm(props: {
 
         setTimeout(() => onClose(), 500);
       },
-      onError: (error) => {
-        toast({
+      onError: (error: unknown) => {
+        if (error instanceof AxiosError) {
+          toast({
+            title: "Error",
+            description: error?.response?.data?.message || error.message,
+            variant: "destructive"
+          })
+        } else {
+            toast({
           title: "Error",
-          description: error?.response?.data?.message || error.message,
+          description: (error as Error).message,
           variant: "destructive"
         })
+        }
+
         onClose();
       }
     })
@@ -188,7 +198,7 @@ export default function EditProjectForm(props: {
             </div>
 
             <Button
-            disabled={isPending}
+              disabled={isPending}
               className="flex place-self-end  h-[40px] text-white font-semibold"
               type="submit"
             >

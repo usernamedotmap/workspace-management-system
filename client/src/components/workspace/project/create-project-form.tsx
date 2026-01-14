@@ -25,6 +25,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createProjectMutationFn } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
 import { Loader } from "lucide-react";
+import { AxiosError } from "axios";
 
 export default function CreateProjectForm({ onClose }: { onClose: () => void }) {
   const navigate = useNavigate();
@@ -78,12 +79,21 @@ export default function CreateProjectForm({ onClose }: { onClose: () => void }) 
           variant: "success"
         })
       },
-      onError: (error) => {
-        toast({
-          title: "Error",
-          description: error.response?.data?.message || error?.message,
-          variant: "destructive",
-        })
+      onError: (error: unknown) => {
+        if (error instanceof AxiosError) {
+          toast({
+            title: "Error",
+            description: error.response?.data?.message || error?.message,
+            variant: "destructive",
+          })
+        } else {
+          toast({
+            title: "Error",
+            description: (error as Error).message,
+            variant: "destructive",
+          })
+        }
+
       }
     })
   };
@@ -151,7 +161,7 @@ export default function CreateProjectForm({ onClose }: { onClose: () => void }) 
                   <FormItem>
                     <FormLabel className="dark:text-[#f1f7feb5] text-sm">
                       Project description
-                      
+
                     </FormLabel>
                     <FormControl>
                       <Textarea

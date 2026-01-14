@@ -27,6 +27,7 @@ import { toast } from "@/hooks/use-toast";
 import { Eye, EyeClosed, Loader } from "lucide-react";
 import { useState } from "react";
 import PageMeta from "@/components/common/PageMeta";
+import { AxiosError } from "axios";
 // import { useStore } from "@/store/store";
 
 const SignIn = () => {
@@ -70,143 +71,152 @@ const SignIn = () => {
         navigate(decodeUrl || `/workspace/${user.currentWorkSpace}`)
 
       },
-      onError: (error) => {
-        toast({
-          title: "Error",
-          description: error.response.data.message || error.message,
-          variant: "destructive"
-        })
+      onError: (error: unknown) => {
+        if (error instanceof AxiosError) {
+          toast({
+            title: "Error",
+            description: error.response?.data.message || error.message,
+            variant: "destructive"
+          })
+        } else {
+          toast({
+            title: "Error",
+            description: (error as Error).message,
+            variant: "destructive"
+          })
+        }
+
       }
     })
   };
 
   return (
     <>
-    <PageMeta title="Sign In" description="Sign in to your account" />
-    
+      <PageMeta title="Sign In" description="Sign in to your account" />
+
       <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
-      <div className="flex w-full max-w-sm flex-col gap-6">
-   
-        {/* Logo */}
-        <Link
-          to="/"
-          className="flex items-center gap-2 justify-center font-semibold"
-        >
-          <Logo />
-          <span>TMS</span>
-        </Link>
+        <div className="flex w-full max-w-sm flex-col gap-6">
 
-        {/* Card na dito */}
+          {/* Logo */}
+          <Link
+            to="/"
+            className="flex items-center gap-2 justify-center font-semibold"
+          >
+            <Logo />
+            <span>TMS</span>
+          </Link>
 
-        <Card>
-          <CardHeader className="text-center space-y-1">
-            <CardTitle className="text-xl sm:text-2xl">Welcome back</CardTitle>
-            <CardDescription className="text-sm sm:text-base">
-              Login with your Email or Google account
-            </CardDescription>
-          </CardHeader>
+          {/* Card na dito */}
 
-          <CardContent className="space-y-6">
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                <div className="grid gap-6">
-                  <div className="flex flex-col gap-4">
-                    <GoogleOauthButton label="Login" />
-                  </div>
+          <Card>
+            <CardHeader className="text-center space-y-1">
+              <CardTitle className="text-xl sm:text-2xl">Welcome back</CardTitle>
+              <CardDescription className="text-sm sm:text-base">
+                Login with your Email or Google account
+              </CardDescription>
+            </CardHeader>
 
-                  {/* divider daw */}
-                  <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
-                    <span className="relative z-10 bg-background px-2 text-muted-foreground">
-                      Or continue with
-                    </span>
-                  </div>
-                  <div className="grid gap-3">
-                    <div className="grid gap-2">
-                      <FormField
-                        control={form.control}
-                        name="email"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="dark:text-[#f1f7feb5] text-sm">
-                              Email
-                            </FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder="Johndoe@example.com"
-                                className="!h-[48px] focus:ring-ring focus:outline-none"
-                                {...field}
-                              />
-                            </FormControl>
-
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+            <CardContent className="space-y-6">
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                  <div className="grid gap-6">
+                    <div className="flex flex-col gap-4">
+                      <GoogleOauthButton label="Login" />
                     </div>
-                    <div className="relative grid gap-2">
-                      <FormField
-                        control={form.control}
-                        name="password"
-                        render={({ field }) => (
-                          <FormItem>
-                            <div className="flex items-center">
+
+                    {/* divider daw */}
+                    <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
+                      <span className="relative z-10 bg-background px-2 text-muted-foreground">
+                        Or continue with
+                      </span>
+                    </div>
+                    <div className="grid gap-3">
+                      <div className="grid gap-2">
+                        <FormField
+                          control={form.control}
+                          name="email"
+                          render={({ field }) => (
+                            <FormItem>
                               <FormLabel className="dark:text-[#f1f7feb5] text-sm">
-                                Password
+                                Email
                               </FormLabel>
+                              <FormControl>
+                                <Input
+                                  placeholder="Johndoe@example.com"
+                                  className="!h-[48px] focus:ring-ring focus:outline-none"
+                                  {...field}
+                                />
+                              </FormControl>
 
-                            </div>
-                            <FormControl>
-                              <Input
-                                type={showPassword ? "text" : "password"}
-                                className="!h-[48px]"
-                                {...field}
-                              />
-                            </FormControl>
-
-                            <FormMessage />
-                          </FormItem>
-                        )}
-
-                      />
-                      <div className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer" onClick={() => setShowPassword(!showPassword)}>
-                        {showPassword ? (
-                          <EyeClosed />
-                      ) : (
-                          <Eye />
-                        )}
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
                       </div>
-                      <a
-                        href="#"
-                        className="ml-auto text-sm underline-offset-4 hover:underline"
-                      >
-                        Forgot your password?
-                      </a>
-                    </div>
-                    <Button disabled={isPending} type="submit" className="w-full">
-                      {isPending ? <Loader className="animate-spin" /> : "Login"}
-                    </Button>
-                  </div>
-                  <div className="text-center text-sm">
-                    Don&apos;t have an account?{" "}
-                    <Link
-                      to="/sign-up"
-                      className="underline underline-offset-4"
-                    >
-                      Sign up
-                    </Link>
-                  </div>
-                </div>
-              </form>
-            </Form>
-          </CardContent>
-        </Card>
-        <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary  ">
-          By clicking continue, you agree to our{" "}
-          <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
-        </div>
+                      <div className="relative grid gap-2">
+                        <FormField
+                          control={form.control}
+                          name="password"
+                          render={({ field }) => (
+                            <FormItem>
+                              <div className="flex items-center">
+                                <FormLabel className="dark:text-[#f1f7feb5] text-sm">
+                                  Password
+                                </FormLabel>
 
+                              </div>
+                              <FormControl>
+                                <Input
+                                  type={showPassword ? "text" : "password"}
+                                  className="!h-[48px]"
+                                  {...field}
+                                />
+                              </FormControl>
+
+                              <FormMessage />
+                            </FormItem>
+                          )}
+
+                        />
+                        <div className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer" onClick={() => setShowPassword(!showPassword)}>
+                          {showPassword ? (
+                            <EyeClosed />
+                          ) : (
+                            <Eye />
+                          )}
+                        </div>
+                        <a
+                          href="#"
+                          className="ml-auto text-sm underline-offset-4 hover:underline"
+                        >
+                          Forgot your password?
+                        </a>
+                      </div>
+                      <Button disabled={isPending} type="submit" className="w-full">
+                        {isPending ? <Loader className="animate-spin" /> : "Login"}
+                      </Button>
+                    </div>
+                    <div className="text-center text-sm">
+                      Don&apos;t have an account?{" "}
+                      <Link
+                        to="/sign-up"
+                        className="underline underline-offset-4"
+                      >
+                        Sign up
+                      </Link>
+                    </div>
+                  </div>
+                </form>
+              </Form>
+            </CardContent>
+          </Card>
+          <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary  ">
+            By clicking continue, you agree to our{" "}
+            <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+          </div>
+
+        </div>
       </div>
-    </div>
 
     </>
   );
