@@ -26,6 +26,8 @@ const BASE_PATH = config.BASE_PATH;
 const ORIGIN = config.FRONTEND_ORIGIN;
 const PORT = config.PORT;
 
+console.log("BASE_PATH:", BASE_PATH);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -36,7 +38,7 @@ app.use(
     maxAge: 24 * 60 * 60 * 1000,
     secure: config.NODE_ENV === "production",
     httpOnly: true,
-    sameSite: "lax",
+    sameSite: config.NODE_ENV === "production" ? "none" : "lax",
   })
 );
 
@@ -85,6 +87,6 @@ app.use(`${BASE_PATH}/task`, passportAuthenticateJWT, taskRoutes);
 app.use(errorHandler);
 
 app.listen(PORT, async () => {
-  console.log(`Server listening to port ${PORT} in ${config.NODE_ENV}`);
+  console.log(`Server listening to port ${PORT} in ${config.NODE_ENV} ${BASE_PATH}`);
   await connectDatabase();
 });
