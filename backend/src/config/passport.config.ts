@@ -80,7 +80,7 @@ export const passportAuthenticateJWT = async (
   next: NextFunction
 ) => {
   try {
-    const accessToken = req.session?.accessToken;
+    const accessToken = req.cookies?.accessToken;
 
     if (!accessToken) {
       return res.status(HTTPSTATUS.UNAUTHORIZED).json({
@@ -103,7 +103,7 @@ export const passportAuthenticateJWT = async (
     next();
   } catch (error: any) {
     if (error.name === "TokenExpiredError") {
-      return res.status(HTTPSTATUS.UNAUTHORIZED).json({ message: "Access token expired" });
+      return res.status(HTTPSTATUS.UNAUTHORIZED).json({ message: "Access token expired", code: "TOKEN_EXPIRED" });
     }
 
     return res

@@ -1,6 +1,5 @@
 import "dotenv/config";
 import express from "express";
-import session from "cookie-session";
 import cors from "cors";
 import { config } from "./config/app.config";
 import connectDatabase from "./config/database.config";
@@ -9,12 +8,11 @@ import { HTTPSTATUS } from "./config/http.config";
 import { asyncHandler } from "./middlewares/asyncHandler";
 // import { BadRequestException } from "./utils/appError";
 // import { ErrorCodeEnum } from "./enums/error_code";
-
+import cookieParser from "cookie-parser";
 import "./config/passport.config";
 import passport from "passport";
 import authRoutes from "./routes/auth.route";
 import userRoutes from "./routes/user.route";
-import isAuthenticated from "./middlewares/isAuthenticated";
 import workspaceRoutes from "./routes/workspace.route";
 import memberRoutes from "./routes/member.route";
 import projectRoutes from "./routes/project.route";
@@ -31,16 +29,18 @@ console.log("BASE_PATH:", BASE_PATH);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(
-  session({
-    name: "session",
-    keys: [config.SESSION_SECRET],
-    maxAge: 24 * 60 * 60 * 1000,
-    secure: config.NODE_ENV === "production",
-    httpOnly: true,
-    sameSite: config.NODE_ENV === "production" ? "none" : "lax",
-  })
-);
+// app.use(
+//   session({
+//     name: "session",
+//     keys: [config.SESSION_SECRET],
+//     maxAge: 24 * 60 * 60 * 1000,
+//     secure: config.NODE_ENV === "production",
+//     httpOnly: true,
+//     sameSite: config.NODE_ENV === "production" ? "none" : "lax",
+//   })
+// );
+
+app.use(cookieParser());
 
 app.use(passport.initialize());
 // app.use(passport.session());

@@ -10,6 +10,8 @@ import {
 import jwt from "jsonwebtoken";
 import passport from "passport";
 import { signJwtToken, signRefreshToken } from "../utils/jwt";
+import { getClearCookieOptions, getCookieOptions } from "../utils/cookieOpt";
+
 
 export const googleLoginCallBack = asyncHandler(
   async (req: Request, res: Response) => {
@@ -25,11 +27,13 @@ export const googleLoginCallBack = asyncHandler(
     const accessToken = signJwtToken({ userId: user._id });
     const refreshToken = signRefreshToken({ userId: user._id });
 
-    // ✅ store in session
-    req.session = {
-      accessToken,
-      refreshToken,
-    };
+    // ✅ store in cookies na to
+    res.cookie("accessToken", accessToken, getCookieOptions());
+    res.cookie("refreshToken", refreshToken, getCookieOptions());
+      
+
+ 
+  
 
     return res.redirect(
       `${config.FRONTEND_ORIGIN}/workspace/${currentWorkSpace || ""}`
@@ -73,7 +77,11 @@ export const loginUserController = asyncHandler(
         const accessToken = signJwtToken({ userId: user._id });
         const refreshToken = signRefreshToken({ userId: user._id });
 
-        req.session = { accessToken, refreshToken };
+        res.cookie("accessToken", accessToken, getCookieOptions());
+        res.cookie("refreshToken", refreshToken, {
+          ...getCookieOptions(),
+          maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        });
 
         return res.status(HTTPSTATUS.OK).json({
           message: "Logged in successfully",
@@ -95,7 +103,8 @@ export const logoutController = asyncHandler(
       }
     });
 
-    req.session = null;
+    res.clearCookie("accessToken", getClearCookieOptions());
+    res.clearCookie("refreshToken", getClearCookieOptions());
     return res.status(HTTPSTATUS.OK).json({
       message: "Successfully logged out",
     });
@@ -104,7 +113,7 @@ export const logoutController = asyncHandler(
 
 export const refreshTokenController = asyncHandler(
   async (req: Request, res: Response) => {
-    const refreshToken = req.session?.refreshToken;
+    const refreshToken = req.cookies?.refreshToken;
     if (!refreshToken) return res.sendStatus(HTTPSTATUS.UNAUTHORIZED);
 
     let payload: { userId: string };
@@ -114,16 +123,14 @@ export const refreshTokenController = asyncHandler(
         userId: string;
       };
     } catch (error) {
-      req.session = null;
+      res.clearCookie("accessToken", getClearCookieOptions());
+      res.clearCookie("refreshToken", getClearCookieOptions());
       return res.sendStatus(HTTPSTATUS.UNAUTHORIZED);
     }
 
-    if (!req.session) {
-      return res.sendStatus(HTTPSTATUS.UNAUTHORIZED);
-    }
     const newAccessToken = signJwtToken({ userId: payload.userId });
 
-    req.session.accessToken = newAccessToken;
+    res.cookie("accessToken", newAccessToken, getCookieOptions());
 
     res.status(HTTPSTATUS.OK).json({
       accessToken: newAccessToken,
