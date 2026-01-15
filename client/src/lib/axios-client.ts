@@ -35,7 +35,7 @@ const redirectToLogin = () => {
   if (!isRedirecting) {
     isRedirecting = true;
     // Use replace to avoid adding to history
-    window.location.replace("/");k
+    window.location.replace("/");
   }
 };
 
