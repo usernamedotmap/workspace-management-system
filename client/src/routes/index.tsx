@@ -9,6 +9,7 @@ import {
 import AppLayout from "@/layout/app.layout";
 import BaseLayout from "@/layout/base.layout";
 import NotFound from "@/page/errors/NotFound";
+import AuthCallback from "@/page/auth/AuthCallback";
 
 function AppRoutes() {
   return (
@@ -19,6 +20,8 @@ function AppRoutes() {
             <Route key={route.path} path={route.path} element={route.element} />
           ))}
         </Route>
+
+        <Route path="/auth/callback" element={<AuthCallback />} />
 
         <Route path="/" element={<AuthRoute />}>
           <Route element={<BaseLayout />}>
