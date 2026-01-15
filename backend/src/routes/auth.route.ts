@@ -2,6 +2,7 @@ import { Router } from "express";
 import passport from "passport";
 import { config } from "../config/app.config";
 import {
+  exchangeCodeController,
   googleLoginCallBack,
   loginUserController,
   logoutController,
@@ -17,6 +18,7 @@ authRoutes.post("/register", registerUserController);
 authRoutes.post("/login", loginUserController);
 authRoutes.post("/logout", logoutController);
 authRoutes.post("/refresh", refreshTokenController);
+authRoutes.post("/exchange-code", exchangeCodeController);
 
 authRoutes.get(
   "/google",

@@ -12,12 +12,10 @@ import passport from "passport";
 import { signJwtToken, signRefreshToken } from "../utils/jwt";
 import { getClearCookieOptions, getCookieOptions } from "../utils/cookieOpt";
 
-
 export const googleLoginCallBack = asyncHandler(
   async (req: Request, res: Response) => {
     const user = req.user;
     const currentWorkSpace = req.user?.currentWorkSpace;
-
 
     if (!user) {
       return res.redirect(
@@ -25,15 +23,19 @@ export const googleLoginCallBack = asyncHandler(
       );
     }
 
-    const accessToken = signJwtToken({ userId: user._id });
-    const refreshToken = signRefreshToken({ userId: user._id });
+    const oneTimeCode = jwt.sign({ userId: user._id }, config.JWT_SECRET, {
+      expiresIn: "2m",
+    });
 
-    // ✅ store in cookies na to
-    res.cookie("accessToken", accessToken, getCookieOptions());
-    res.cookie("refreshToken", refreshToken, getCookieOptions());
-      
+    // const accessToken = signJwtToken({ userId: user._id });
+    // const refreshToken = signRefreshToken({ userId: user._id });
+
+    // // ✅ store in cookies na to
+    // res.cookie("accessToken", accessToken, getCookieOptions());
+    // res.cookie("refreshToken", refreshToken, getCookieOptions());
+
     return res.redirect(
-      `${config.FRONTEND_ORIGIN}/workspace/${currentWorkSpace || ""}`
+      `${config.FRONTEND_ORIGIN}/auth/callback?code=${oneTimeCode}&workspace=${currentWorkSpace || ""}`
     );
   }
 );
@@ -105,6 +107,36 @@ export const logoutController = asyncHandler(
     return res.status(HTTPSTATUS.OK).json({
       message: "Successfully logged out",
     });
+  }
+);
+
+export const exchangeCodeController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { code } = req.body;
+
+    if (!code) {
+      return res.status(HTTPSTATUS.BAD_REQUEST).json({
+        message: "Code is required",
+      });
+    }
+
+    try {
+      const payload = jwt.verify(code, config.JWT_SECRET) as { userId: string };
+
+      const accessToken = signJwtToken({ userId: payload.userId });
+      const refreshToken = signRefreshToken({ userId: payload.userId });
+
+      res.cookie("accessToken", accessToken, getCookieOptions());
+      res.cookie("refreshToken", refreshToken, getCookieOptions());
+
+      return res.status(HTTPSTATUS.OK).json({
+        message: "Authentication successful",
+      });
+    } catch (error) {
+      return res.status(HTTPSTATUS.UNAUTHORIZED).json({
+        message: "Invalid or expired code",
+      });
+    }
   }
 );
 
