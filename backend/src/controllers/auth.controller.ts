@@ -18,6 +18,7 @@ export const googleLoginCallBack = asyncHandler(
     const user = req.user;
     const currentWorkSpace = req.user?.currentWorkSpace;
 
+
     if (!user) {
       return res.redirect(
         `${config.FRONTEND_GOOGLE_CALLBACK_URL}?status=failure`
@@ -31,10 +32,6 @@ export const googleLoginCallBack = asyncHandler(
     res.cookie("accessToken", accessToken, getCookieOptions());
     res.cookie("refreshToken", refreshToken, getCookieOptions());
       
-
- 
-  
-
     return res.redirect(
       `${config.FRONTEND_ORIGIN}/workspace/${currentWorkSpace || ""}`
     );
