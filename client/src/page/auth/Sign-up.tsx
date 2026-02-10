@@ -30,7 +30,7 @@ import PageMeta from "@/components/common/PageMeta";
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);  
 
   const { mutate, isPending } = useMutation({
     mutationFn: registerMutationFn

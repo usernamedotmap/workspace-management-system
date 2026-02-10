@@ -20,8 +20,7 @@ const seedRoles = async () => {
 
     for (const roleName in RolePermissions) {
       const role = roleName as keyof typeof RolePermissions;
-      const permissions = RolePermissions[role];
-
+    const permissions = RolePermissions[role];
       const existingRole = await RoleModel.findOne({
         name: role,
       }).session(session);

@@ -42,8 +42,8 @@ const Asidebar = () => {
 
   return (
     <>
-      <Sidebar collapsible="icon">
-        <SidebarHeader className="!py-0 dark:bg-background">
+      <Sidebar collapsible="icon" className="scrollbar">
+        <SidebarHeader className="!py-0 dark:bg-background ">
           <div className="flex h-[50px] items-center justify-start w-full px-1">
             <Logo url={`/workspace/${workspaceId}`} />
             {open && (

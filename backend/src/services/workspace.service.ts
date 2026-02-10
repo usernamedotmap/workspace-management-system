@@ -87,7 +87,6 @@ export const getWorkspaceByIdService = async (workspaceId: string) => {
 };
 
 export const getWorkspaceMemberService = async (workspaceId: string) => {
-  console.log("workspaceId >>>", workspaceId, typeof workspaceId);
 
   const members = await MemberModel.find({
     workspaceId,
@@ -198,7 +197,10 @@ export const deleteWorkspaceByIdService = async (
       throw new NotFoundException("Workspace not found");
     }
 
-    if (workspace.owner.toString() !== userId) {
+
+
+
+    if (!workspace.owner.equals(userId)) {
       throw new BadRequestException(
         "You are not authorized to delete this workspace"
       );

@@ -46,7 +46,7 @@ const SignIn = () => {
 
   const formSchema = z.object({
     email: z.string().trim().email("Invalid email address").min(1, {
-      message: "Workspace name is required",
+      message: "Email is required",
     }),
     password: z.string().trim().min(1, {
       message: "Password is required",
@@ -180,7 +180,7 @@ const SignIn = () => {
                         />
                         <div className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer" onClick={() => setShowPassword(!showPassword)}>
                           {showPassword ? (
-                            <EyeClosed />
+                            <EyeClosed /> 
                           ) : (
                             <Eye />
                           )}

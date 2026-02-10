@@ -2,7 +2,7 @@ import { HTTPSTATUS, httpStatusCodeType } from "../config/http.config";
 import { ErrorCodeEnum, ErrorCodeEnumType } from "../enums/error_code";
 
 export class AppError extends Error {
-  public statusCode: httpStatusCodeType;
+  public statusCode: httpStatusCodeType;  
   public errorCode?: ErrorCodeEnumType;
 
   constructor(

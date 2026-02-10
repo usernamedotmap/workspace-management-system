@@ -14,7 +14,7 @@ import ThemeToggle from "./toggle/theme-toggle";
 
 const Header = () => {
   const location = useLocation();
-  const workspaceId = useWorkspaceId();
+  const workspaceId = useWorkspaceId(); 
 
   const pathname = location.pathname;
 

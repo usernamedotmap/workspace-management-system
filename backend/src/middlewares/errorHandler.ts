@@ -5,7 +5,7 @@ import { ZodError, z } from "zod";
 import { ErrorCodeEnum } from "../enums/error_code";
 
 const formZodError = (res: Response, error: z.ZodError) => {
-  const errors = error?.issues?.map((err) => ({
+  const errors = error?.issues?.map((err) => ({ 
     field: err.path.join("."),
     message: err.message,
   }));
