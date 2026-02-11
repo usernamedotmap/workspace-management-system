@@ -14,7 +14,7 @@ export const createWorkspaceService = async (
   body: {
     name: string;
     description?: string | undefined;
-  }
+  },
 ) => {
   const { name, description } = body;
 
@@ -87,7 +87,6 @@ export const getWorkspaceByIdService = async (workspaceId: string) => {
 };
 
 export const getWorkspaceMemberService = async (workspaceId: string) => {
-
   const members = await MemberModel.find({
     workspaceId,
   })
@@ -137,7 +136,7 @@ export const getWorkspaceAnalyticsServices = async (workspaceId: string) => {
 export const changeMemberRoleService = async (
   workspaceId: string,
   memberId: string,
-  roleId: string
+  roleId: string,
 ) => {
   const role = await RoleModel.findById(roleId);
   if (!role) {
@@ -164,7 +163,7 @@ export const changeMemberRoleService = async (
 export const updateWorkspaceByIdService = async (
   workspaceId: string,
   name: string,
-  description?: string
+  description?: string,
 ) => {
   const workspace = await WorkSpaceModel.findById(workspaceId);
 
@@ -184,27 +183,29 @@ export const updateWorkspaceByIdService = async (
 
 export const deleteWorkspaceByIdService = async (
   workspaceId: string,
-  userId: string
+  userId: string,
 ) => {
   const session = await mongoose.startSession();
   session.startTransaction();
 
   try {
-    const workspace = await WorkSpaceModel.findById(workspaceId).session(
-      session
-    );
+    const workspace =
+      await WorkSpaceModel.findById(workspaceId).session(session);
     if (!workspace) {
       throw new NotFoundException("Workspace not found");
     }
 
-
-
-
-    if (!workspace.owner.equals(userId)) {
+    if (workspace.owner.toString() !== userId.toString()) {
       throw new BadRequestException(
-        "You are not authorized to delete this workspace"
+        "You are not authorized to delete this workspace",
       );
     }
+
+    // if (!workspace.owner.equals(userId)) {
+    //   throw new BadRequestException(
+    //     "You are not authorized to delete this workspace"
+    //   );
+    // }
 
     const user = await UserModel.findById(userId).session(session);
     if (!user) {
